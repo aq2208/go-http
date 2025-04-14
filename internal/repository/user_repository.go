@@ -15,6 +15,8 @@ func GetAllUsers() ([]model.User, error) {
 	var users []model.User
 	for rows.Next() {
 		var u model.User
+
+		//* scan and assign each row's column values to struct fields (ORDER MATTERS)
 		if err := rows.Scan(&u.UserId, &u.Name, &u.Email, &u.Address, &u.CreatedAt); err != nil {
 			return nil, err
 		}
@@ -23,4 +25,21 @@ func GetAllUsers() ([]model.User, error) {
 	}
 
 	return users, nil
+}
+
+func GetUserById(userId int) (*model.User, error) {
+	row, err := database.DB.Query("SELECT * FROM users WHERE user_id = ?", userId)
+	if err != nil {
+		return nil, err
+	}
+	defer row.Close()
+
+	var u model.User
+
+	row.Next()
+	if err := row.Scan(&u.UserId, &u.Name, &u.Email, &u.Address, &u.CreatedAt); err != nil {
+		return nil, err
+	}
+
+	return &u, nil
 }
