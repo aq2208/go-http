@@ -1,1 +1,37 @@
+# Build output directories
+/bin/
+/build/
+
+# Go binaries
+*.exe
+*.out
+*.test
+
+# Dependency directories
+/vendor/
+
+# Go workspace file
+go.work
+
+# Golang coverage reports
+*.cover
+*.cov
+
+# Go module files
+go.sum
+go.mod
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# .env file (for sensitive configuration data)
 .env
+
+# Optional: Ignore any other files generated during development
+*.log
