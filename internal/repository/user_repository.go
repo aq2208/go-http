@@ -1,8 +1,10 @@
 package repository
 
 import (
-	"go-database/internal/model"
+	"database/sql"
+	"fmt"
 	"go-database/internal/database"
+	"go-database/internal/model"
 )
 
 func GetAllUsers() ([]model.User, error) {
@@ -28,16 +30,14 @@ func GetAllUsers() ([]model.User, error) {
 }
 
 func GetUserById(userId int) (*model.User, error) {
-	row, err := database.DB.Query("SELECT * FROM users WHERE user_id = ?", userId)
-	if err != nil {
-		return nil, err
-	}
-	defer row.Close()
-
 	var u model.User
 
-	row.Next()
+	row := database.DB.QueryRow("SELECT * FROM users WHERE user_id = ?", userId)
 	if err := row.Scan(&u.UserId, &u.Name, &u.Email, &u.Address, &u.CreatedAt); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("userId %d: no such user", userId)
+		}
+
 		return nil, err
 	}
 
